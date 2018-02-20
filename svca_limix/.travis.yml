@@ -1,0 +1,27 @@
+language: python
+sudo: required
+dist: trusty
+git:
+  depth: 5
+matrix:
+  include:
+  - python: 2.7
+before_install:
+- pip install Cython
+- travis/install_pandoc.sh
+script:
+- python setup.py sdist
+- pip install dist/`ls dist | grep -i -E '\.(gz)$' | head -1` -vvv;
+- pushd /
+- python -c "import sys; import limix; sys.exit(limix.test())"
+- popd
+notifications:
+  email: false
+deploy:
+  provider: pypi
+  user: dhorta
+  password:
+    secure: I25edJGPWVUvbDJ2PYWdxnMmGLfvv9CBnYDn+WTXaHvgFa1VxOmsv9YZPX/2x1n8n7rsSKzu8AnBhgcwZDZ9xIZl7PuU5toRmr+MmKCVwWCZzxtl3KzDRBNRujgwX5W9UlnxXpn/Ec6/qMLmpQnedLlD0QpxLpR60MuPH8zl0sfPdEyNP1xHYUIMNae3nWlP55Z/IOKpk8jKQSntffsOOrCGvqKLQefcG/V9QEzJ/tFRC8odZGWowBcQEP26gzZhGKK6f/TFO1KCpqG4IpG538KXDXeGdisdLTBvksIeEwGa1SW9Ped+Viu2ilBAid6LPzhGWcHzmaW76wXTVLEa3FiLe8epSaJOrH42PQPTT0tq37w2axbopjDcjxD6chNJopPEVKe88QgbC9FIrfFTsAwk01QdriLeGPJfazI0wo56j4tvjEzHYfm7pa/7KBuATPtewMAPFwKDYeJRJL7xc7ieeGM4+/XO0ATtZIMPKaVZIlrBp9K/RiWu1VrY7YeUiOrnlTBjKiZc5eFZKQBs0GKBSRyvKPUMolVcE6MLIdwGvTpoEPY4MgtJ7pxtxD/BrFDkxASqW9lQfkjEsd6R3FxSXpQHvq+xik6ewHTn/2j/ke3RvMN4temyL6ieyDDYwMuCfQiuQjuoxrMWbW1n6SZPG1qvMvnqa/XPreREz/w=
+  on:
+    distributions: sdist bdist_wheel
+    repo: PMBio/limix
