@@ -31,5 +31,5 @@ if __name__ == '__main__':
                 results_directory + ' ' + \
                 str(protein_ix)+ ' ' +\
                 str(bootstrap_index) + ' '+\
-                normalisation + ' '+\
+                normalisation + ' '
             os.system(command_line)

@@ -31,5 +31,5 @@ if __name__ == '__main__':
                     str(protein_ix)+ ' ' +\
                     str(bootstrap_index) + ' '+\
                     str(N_fold) + ' '+\
-                    normalisation + ' '+\
+                    normalisation + ' '
                 os.system(command_line)
