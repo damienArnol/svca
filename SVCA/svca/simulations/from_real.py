@@ -12,7 +12,7 @@ class FromRealSimulation(object):
         self.Y = Y
         self.kin_from = kin_from
 
-    def simulate(self, cterms=['direct', 'local'], env_size=None): # Should we add local ?
+    def simulate(self, cterms=['intrinsic', 'environmental'], interactions_size=None): # Should we add local ?
         # train gp with requested terms
         model = Model2(self.Y, ['all'], self.X, norm='quantile', oos_predictions=0.,
                        cov_terms=cterms, kin_from=self.kin_from)
@@ -24,14 +24,14 @@ class FromRealSimulation(object):
         k *= covar_rescaling_factor_efficient(k)
 
         # manually add a cross-talk term
-        if env_size is not None:
-            assert 0. < env_size < 1., 'env size must be between 0 and 1 '
+        if interactions_size is not None:
+            assert 0. < interactions_size < 1., 'interactions size must be between 0 and 1 '
             zkz = ZKZCov(self.X, model.Kin)
-            zkz.length = model.loc_noise_cov.length
+            zkz.length = model.environmental_cov.length
             tmp = zkz.K()
             tmp *= covar_rescaling_factor_efficient(tmp)
 
-            tmp *= (env_size / (1- env_size))
+            tmp *= (interactions_size / (1- interactions_size))
             k += tmp
 
         res = np.random.multivariate_normal([0.]*k.shape[0], k)
@@ -44,26 +44,26 @@ class FromRealSimulation3(object):
         self.Y = Y
         self.kin_from = kin_from
 
-    def simulate(self, cterms=['direct', 'local', 'env'], env_size=None):
+    def simulate(self, cterms=['intrinsic', 'environmental', 'interactions'], interactions_size=None):
         # train gp with requested terms
         model = Model2(self.Y, ['all'], self.X, norm='quantile', oos_predictions=0.,
                        cov_terms=cterms, kin_from=self.kin_from)
         model.reset_params()
         model.train_gp(grid_size=10)
 
-        # simulate from gp after removing env term
-        k = model.covar_terms['direct'].K() + \
-            model.covar_terms['local'].K() + \
+        # simulate from gp after removing interactions term
+        k = model.covar_terms['intrinsic'].K() + \
+            model.covar_terms['environmental'].K() + \
             model.covar_terms['noise'].K()
         k *= covar_rescaling_factor_efficient(k)
 
         # manually add a cross-talk term
-        if env_size is not None:
-            assert 0. < env_size < 1., 'env size must be between 0 and 1 '
-            tmp = model.covar_terms['env'].K()
+        if interactions_size is not None:
+            assert 0. < interactions_size < 1., 'interactions size must be between 0 and 1 '
+            tmp = model.covar_terms['interactions'].K()
             tmp *= covar_rescaling_factor_efficient(tmp)
 
-            tmp *= (env_size / (1. - env_size))
+            tmp *= (interactions_size / (1. - interactions_size))
             k += tmp
 
         res = np.random.multivariate_normal([0.]*k.shape[0], k)
@@ -78,16 +78,15 @@ class FromRealSimulation2(object):
 
         self.kin_from = kin_from
 
-    def simulate(self, cterms=['direct', 'local'], env_size=None): # Should we add local ?
+    def simulate(self, cterms=['intrinsic', 'environmental'], interactions_size=None): # Should we add local ?
         # train gp with requested terms
         model = Model2(self.Y, ['all'], self.X, norm='quantile', oos_predictions=0.,
                        cov_terms=cterms, kin_from=self.kin_from)
 
         # do not train model but take variance explained evenly distribuuted
         # ac
-        model.env_cov.length =100
-        model.crowd_cov.length = 100
-        model.loc_noise_cov.length = 100
+        model.interactions_cov.length =100
+        model.environmental_cov.length = 100
 
         model.reset_params()
 
@@ -96,14 +95,14 @@ class FromRealSimulation2(object):
         k *= covar_rescaling_factor_efficient(k)
 
         # manually add a cross-talk term
-        if env_size is not None:
-            assert 0. < env_size < 1., 'env size must be between 0 and 1 '
+        if interactions_size is not None:
+            assert 0. < interactions_size < 1., 'interactions size must be between 0 and 1 '
             zkz = ZKZCov(self.X, model.Kin)
-            zkz.length = model.loc_noise_cov.length
+            zkz.length = model.environmental_cov.length
             tmp = zkz.K()
             tmp *= covar_rescaling_factor_efficient(tmp)
 
-            tmp *= (env_size / (1- env_size))
+            tmp *= (interactions_size / (1- interactions_size))
             k += tmp
 
         res = np.random.multivariate_normal([0.]*k.shape[0], k)

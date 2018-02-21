@@ -44,7 +44,7 @@ def run(data_dir, protein_index, cell_types_file, output_dir, bootstrap_index,
     ####################################################################
     # intrinsic term
     ####################################################################
-    cterms = ['direct', 'local']
+    cterms = ['intrinsic', 'environmental']
     cell_types = ['all']
     model = Model2(Y_sim, cell_types, X, norm=normalisation, oos_predictions=0., cov_terms=cterms, kin_from=kin_from)
     model.reset_params()
@@ -69,29 +69,29 @@ def run(data_dir, protein_index, cell_types_file, output_dir, bootstrap_index,
 
     # add crowding term
     ####################################################################
-    dir_param = model.dir_cov.getParams()
-    local_param = model.loc_noise_cov.getParams()
-    noise_param = model.glob_noise_cov.getParams()
+    int_param = model.intrinsic_cov.getParams()
+    env_param = model.environmental_cov.getParams()
+    noise_param = model.noise_cov.getParams()
 
-    model.add_cov(['env'])
+    model.add_cov(['interactions'])
 
     LL = np.Inf
     for i in range(5):
         if i == 0:
-            dir_bk = dir_param
-            local_bk = local_param
+            int_bk = int_param
+            env_bk = env_param
             noise_bk = noise_param
-            scale_env = True
+            scale_interactions = True
         else:
-            dir_bk = dir_param * s.random.uniform(0.8, 1.2, len(dir_param))
-            local_bk = local_param * s.random.uniform(0.8, 1.2, len(local_param))
+            int_bk = int_param * s.random.uniform(0.8, 1.2, len(int_param))
+            local_bk = local_param * s.random.uniform(0.8, 1.2, len(env_param))
             noise_bk = noise_param * s.random.uniform(0.8, 1.2, len(noise_param))
-            scale_env = False
-        model.set_initCovs({'direct': dir_bk,
+            scale_interactions = False
+        model.set_initCovs({'intrinsic': dir_bk,
                         'noise': noise_bk,
-                        'local':local_bk})
-        if scale_env:
-            model.set_scale_down(['env'])
+                        'environmental':local_bk})
+        if scale_interactions:
+            model.set_scale_down(['interactions'])
         else:
             model.use_scale_down = False
 
@@ -102,7 +102,7 @@ def run(data_dir, protein_index, cell_types_file, output_dir, bootstrap_index,
             saved_params = model.gp.getParams()
 
     model.gp.setParams(saved_params)
-    file_prefix = protein_name[0] + '_' + str(bootstrap_index) + '_env'
+    file_prefix = protein_name[0] + '_' + str(bootstrap_index) + '_interactions'
     write_variance_explained(model, output_dir, file_prefix)
     #write_r2(model, output_dir, file_prefix)
     write_LL(model, output_dir, file_prefix)
