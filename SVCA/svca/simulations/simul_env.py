@@ -1,6 +1,6 @@
 import numpy as np
-from svca.models.model2 import Model2
-from svca.simulations.from_real import FromRealSimulation3
+from svca.models.model1 import Model1
+from svca.simulations.from_real import FromRealSimulation
 from svca.models.io import *
 from svca.util_functions import utils
 import sys
@@ -8,7 +8,7 @@ from limix.utils.preprocess import covar_rescaling_factor_efficient
 from copy import deepcopy
 
 
-def run(data_dir, protein_index, cell_types_file, output_dir, env_size,
+def run(data_dir, protein_index, cell_types_file, output_dir, interactions_size,
         normalisation='standard', permute=False):
     # reading all data
     ####################################################################
@@ -25,9 +25,9 @@ def run(data_dir, protein_index, cell_types_file, output_dir, env_size,
 
     # N_samples = X.shape[0]
 
-    boot_ix = deepcopy(env_size)
-    env_size = float(int(env_size)%10)/10.
-    down_sampling = 1 - float(int(env_size)/10)/10.
+    boot_ix = deepcopy(interactions_size)
+    interactions_size = float(int(interactions_size)%10)/10.
+    down_sampling = 1 - float(int(interactions_size)/10)/10.
 
     # down sampling
     n_sel = down_sampling * X.shape[0]
@@ -46,42 +46,31 @@ def run(data_dir, protein_index, cell_types_file, output_dir, env_size,
 
     # do null simulation
     ####################################################################
-    sim = FromRealSimulation3(X, phenotype, kin_from)
-    Y_sim = sim.simulate(env_size=env_size)
+    sim = FromRealSimulation(X, phenotype, kin_from)
+    Y_sim = sim.simulate(interactions_size=interactions_size)
 
     # run model on simulated data
     ####################################################################
-    # all but env
+    # all but interactions
     ####################################################################
-    cterms = ['direct', 'local']
+    cterms = ['intrinsic', 'environmental']
     cell_types = ['all']
-    model = Model2(Y_sim, cell_types, X, norm=normalisation, oos_predictions=0., cov_terms=cterms, kin_from=kin_from)
+    model = Model1(Y_sim, cell_types, X, norm=normalisation, oos_predictions=0., cov_terms=cterms, kin_from=kin_from)
     model.reset_params()
     model.train_gp(grid_size=10)
 
-    file_prefix = protein_name[0] + '_' + str(boot_ix) + '_local'
+    file_prefix = protein_name[0] + '_' + str(boot_ix) + '_environmental'
     write_variance_explained(model, output_dir, file_prefix)
     write_LL(model, output_dir, file_prefix)
 
     ####################################################################
-    # adding env
+    # adding interactions
     ####################################################################
-    model.add_cov(['env'])
+    model.add_cov(['interactions'])
     model.reset_params()
     model.train_gp(grid_size=10)
 
-    file_prefix = protein_name[0] + '_' + str(boot_ix) + '_env'
-    write_variance_explained(model, output_dir, file_prefix)
-    write_LL(model, output_dir, file_prefix)
-
-    ####################################################################
-    # removing local
-    ####################################################################
-    model.rm_cov(['local'])
-    model.reset_params()
-    model.train_gp(grid_size=10)
-
-    file_prefix = protein_name[0] + '_' + str(boot_ix) + 'noLocal'
+    file_prefix = protein_name[0] + '_' + str(boot_ix) + '_interactions'
     write_variance_explained(model, output_dir, file_prefix)
     write_LL(model, output_dir, file_prefix)
 
@@ -92,8 +81,7 @@ if __name__ == '__main__':
     output_dir = sys.argv[3]
     protein_index = int(sys.argv[4])
     bootstrap_index = sys.argv[5]
-    env_size = bootstrap_index
-    # env_size = 0.1 * float(bootstrap_index)
+    interactions_size = bootstrap_index
 
     normalisation = sys.argv[6]
 
@@ -111,9 +99,9 @@ if __name__ == '__main__':
     # # protein_index = 19
     # protein_index = 3 # 5
     # cell_types_file = ''
-    # env_size = 3
+    # interactions_size = 3
     # output_dir = '/Users/damienarnol1/Documents/local/pro/PhD/spatial/tests/test_new_init/'
     # normalisation='quantile'
     # perm = False
 
-    run(data_dir, protein_index, cell_types_file, output_dir, env_size, normalisation, perm)
+    run(data_dir, protein_index, cell_types_file, output_dir, interactions_size, normalisation, perm)
