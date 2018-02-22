@@ -1,5 +1,5 @@
 # svca
 
-## Instalation 
+## Installation 
 
 
