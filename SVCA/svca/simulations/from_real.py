@@ -14,7 +14,7 @@ class FromRealSimulation(object):
 
     def simulate(self, cterms=['intrinsic', 'environmental', 'interactions'], interactions_size=None):
         # train gp with requested terms
-        model = Model1(self.Y, ['all'], self.X, norm='quantile', oos_predictions=0.,
+        model = Model1(self.Y, self.X, norm='quantile', oos_predictions=0.,
                        cov_terms=cterms, kin_from=self.kin_from)
         model.reset_params()
         model.train_gp(grid_size=10)
