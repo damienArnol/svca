@@ -9,7 +9,7 @@ if __name__ == '__main__':
     # Directory of the analysis: to change, and number of genes/proteins in the
     # dataset
     ##################################################
-    analysis_dir = '/gpfs/nobackup/stegle/users/arnol/spatial/simulations/IMC_env_simulations/'
+    analysis_dir = '/gpfs/nobackup/stegle/users/arnol/spatial/tests_rep_paper/IMC_data/'
     N_prot = 26
 
     ##################################################
@@ -31,5 +31,5 @@ if __name__ == '__main__':
                 results_directory + ' ' + \
                 str(protein_ix)+ ' ' +\
                 str(bootstrap_index) + ' '+\
-                normalisation + ' '+\
+                normalisation + ' '
             os.system(command_line)
