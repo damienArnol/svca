@@ -1,0 +1,25 @@
+---
+title: "Example visualisation"
+output:
+  html_document: default
+  html_notebook: default
+---
+
+
+Variance signatures visualisation
+
+```{r}
+# load functions for signature visualisation
+source('visu_signatures_functions.R')
+```
+
+```{r}
+# define input directory with SVCA results 
+working_dir = '/tmp/test_svca/'
+```
+
+```{r}
+# load and concatenate all results
+all_sig = read_all_signatures(working_dir)
+plot_sig_bars(all_sig)
+```
