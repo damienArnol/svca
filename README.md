@@ -32,6 +32,8 @@ We recommend using a cluster for this.
 4. Run `python run_all_cluster.py` in the `run_cluster` directory.
 5. Results are in a `results` directory in each image directory
 
+**NB: For data format, look at the example in the data/IMC_example directory, which should correspond to your analysis_dir folder**
+
 ### Visualising variance signatures
 1. Adapt the file `SVCA/svca/plot_scripts/plot_signatures.R` (bottom). `working_dir` should be your analysis directory and `plot_dir` the directory in which you want to save your plots.
 2. run the file
