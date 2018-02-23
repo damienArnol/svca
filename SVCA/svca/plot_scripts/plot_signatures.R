@@ -4,42 +4,35 @@ library(gplots)
 library(plyr)
 library(pheatmap)
 
-working_dir = '/tmp/test_svca/'
-plot_dir = '/tmp/plots/'
-
 # colours = c('#929292', '#004D7F'  , '#017100','#B51700', '#FF9300' )
 colours = c('#929292', '#004D7F'  , '#017100', '#FF9300' )
-
-col_env = colorRampPalette(c('white', '#FF9300'))(n=100)
 
 w=1500
 h=800
 base_size = 15
-image_dir = working_dir
-noEnv = FALSE
 
 read_effects = function(image_dir){
-  
+
   if('results' %in% list.files(image_dir)) image_dir = paste(image_dir, 'results', sep='/')
-  
+
   # get protein names
   tmp = list.files(image_dir, full.names = FALSE)
-  
+
   # TODO removes
-  tmp = tmp[grep('effect', tmp)] 
+  tmp = tmp[grep('effect', tmp)]
   tmp = tmp[grep('interactions', tmp)]
 
-  
+
   ########
   protein_names = unlist(lapply(strsplit(tmp, '_'), function(x) return(x[1])))
   # print(protein_names)
-  
+
   # get file names
   file_names = list.files(image_dir, full.names = TRUE)
   file_names = file_names[grep('effect', file_names)]
-  file_names = file_names[grep('interactions', file_names)] 
+  file_names = file_names[grep('interactions', file_names)]
   ########
-  
+
   # read results
   tmp = lapply(file_names, function(x) read.table(x, header=TRUE))
   all_res = do.call(rbind, tmp)
@@ -47,48 +40,48 @@ read_effects = function(image_dir){
   ix = 2:dim(all_res)[2]
   all_res[,ix] = all_res[,ix]/rowSums(all_res[,ix])
   colnames(all_res)[1] = 'protein'
-  
+
   # summarise results
   all_res_df = melt(all_res, id.vars = 'protein')
   colnames(all_res_df) = c('protein', 'effect', 'value')
   res_sum = ddply(all_res_df, c('protein', 'effect'), summarise, mean_value=mean(value, na.rm=TRUE))
   res_sum$effect <- factor(res_sum$effect, levels=c('noise',"intrinsic", "environmental", 'interactions'))
-  
+
   return(res_sum)
-  
+
 }
 
 
 plot_sig = function(working_dir, plot_dir){
   all_images = list.files(working_dir, full.names = TRUE)
   all_images_short = list.files(working_dir, full.names = FALSE)
-  
+
   all_res = lapply(all_images, read_effects)
   for(i in 1:length(all_res)){
     colnames(all_res[[i]])[3] = all_images_short[i]
   }
-  
+
   all_res_merged = all_res[[1]]
   if (length(all_res) > 1){
     for(i in 2:length(all_res)){# length(all_res)
-      all_res_merged = merge(all_res_merged, all_res[[i]], by=c('protein', 'effect'), all=TRUE)  
+      all_res_merged = merge(all_res_merged, all_res[[i]], by=c('protein', 'effect'), all=TRUE)
     }
   }
-  
+
   ###############################################################################################
   # renaming
   ###############################################################################################
   all_res_merged = melt(all_res_merged)
-  
+
   tmp = as.vector(all_res_merged$effect)
   tmp[tmp =='environmental'] = 'Environmental effect'
   tmp[tmp =='interactions'] = 'Cell-cell interactions'
   tmp[tmp =='noise'] = 'Residual noise'
   tmp[tmp =='intrinsic'] = 'Intrinsic effect'
   all_res_merged$effect = tmp
-  
+
   all_res_merged$effect <- factor(all_res_merged$effect, levels=c("Residual noise", "Intrinsic effect", 'Environmental effect', 'Cell-cell interactions'))
-  
+
   ###############################################################################################
   # do violin plot
   p=ggplot(all_res_merged, aes(x=effect, y=value, fill=effect), alpha=0.75)+
@@ -101,8 +94,8 @@ plot_sig = function(working_dir, plot_dir){
     coord_flip()
   p
   ggsave(paste(plot_dir, '/violin_plots.pdf', sep = '/'),p, device = 'pdf', width = 2, height = 4)
-  
-  
+
+
   ###############################################################################################
   p = ggplot(all_res_merged, aes(x = protein, y = value, fill=effect))+
     geom_boxplot()+
@@ -125,7 +118,7 @@ plot_sig = function(working_dir, plot_dir){
     colnames(tmp)= c('protein', 'cc', 'effect', 'value')
     res_sum_all = merge(tmp, res_sum, by = c('protein', 'effect'))
 
-  
+
   # select top 20
   sel = sort(unique(res_sum_all$env), decreasing = T)[1:20]
   # res_sum_all_tmp = res_sum_all[res_sum_all$env %in% sel,]
@@ -139,11 +132,15 @@ plot_sig = function(working_dir, plot_dir){
     theme(legend.position="bottom")+
     theme(legend.text=element_text(size=20))
   p
-  
+
   ggsave(paste(plot_dir, '/bars.pdf', sep = '/'), p, device = 'pdf', width = 13, height = 5)
 
-  
+
 }
 
+#################################################
+# To modify
+#################################################
+working_dir = '/tmp/test_svca/'
+plot_dir = '/tmp/plots/'
 plot_sig(working_dir, plot_dir)
-
