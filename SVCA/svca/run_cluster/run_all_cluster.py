@@ -4,12 +4,12 @@ import glob
 import os
 
 if __name__ == '__main__':
-
     ##################################################
     # Directory of the analysis: to change, and number of genes/proteins in the
     # dataset
     ##################################################
-    analysis_dir = '/gpfs/nobackup/stegle/users/arnol/spatial/tests_rep_paper/IMC_data/'
+    submit_cmd = 'bsub -M 800 -o tmp_log'  # To change for your cluster settings
+    analysis_dir = ''
     N_prot = 26
 
     ##################################################
@@ -24,12 +24,10 @@ if __name__ == '__main__':
         results_directory = image_dir + '/results/'
         results_directory = util_functions.make_dir(results_directory)
         for protein_ix in range(0, N_prot):
-            bootstrap_index = 1
-            command_line = \
-                'bsub -q research-rh7 -o tmp_log -M 800 -R "rusage[mem=800]" python ../run/run_indiv.py ' + \
+            command_line = submit_cmd + ' ' + \
+                'python ../run/run_indiv.py ' + \
                 image_dir + ' ' + \
                 results_directory + ' ' + \
                 str(protein_ix)+ ' ' +\
-                str(bootstrap_index) + ' '+\
                 normalisation + ' '
             os.system(command_line)

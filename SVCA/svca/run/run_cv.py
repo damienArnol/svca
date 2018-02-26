@@ -7,7 +7,7 @@ from limix.utils.preprocess import covar_rescaling_factor_efficient
 
 
 def run(data_dir, protein_index, output_dir, bootstrap_index,
-        normalisation='standard', N_fold=5, permute=False):
+        normalisation='quantile', N_fold=5, permute=False):
     # reading all data
     ####################################################################
     expression_file = data_dir + '/expressions.txt'

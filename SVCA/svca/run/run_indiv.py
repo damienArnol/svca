@@ -6,8 +6,8 @@ import sys
 from limix.utils.preprocess import covar_rescaling_factor_efficient
 
 
-def run(data_dir, protein_index, output_dir, bootstrap_index,
-        normalisation='standard', permute=False):
+def run(data_dir, protein_index, output_dir,
+        normalisation='quantile', permute=False):
     # reading all data
     ####################################################################
     expression_file = data_dir + '/expressions.txt'
@@ -32,32 +32,12 @@ def run(data_dir, protein_index, output_dir, bootstrap_index,
 
     # intrinsic term
     ####################################################################
-    cterms = ['intrinsic']
-    model = Model1(phenotype, X, norm=normalisation, oos_predictions=0., cov_terms=cterms, kin_from=kin_from, cv_ix=bootstrap_index)
+    cterms = ['intrinsic', 'environmental', 'interactions']
+    model = Model1(phenotype, X, norm=normalisation, oos_predictions=0., cov_terms=cterms, kin_from=kin_from, cv_ix=0)
     model.reset_params()
     model.train_gp(grid_size=10)
 
-    file_prefix = protein_name[0] + '_' + str(bootstrap_index) + '_intrinsic'
-    write_variance_explained(model, output_dir, file_prefix)
-    write_LL(model, output_dir, file_prefix)
-
-    # add local term
-    ####################################################################
-    model.add_cov(['environmental'])
-    model.reset_params()
-    model.train_gp(grid_size=10)
-
-    file_prefix = protein_name[0] + '_' + str(bootstrap_index) + '_environmental'
-    write_variance_explained(model, output_dir, file_prefix)
-    write_LL_grid(model, output_dir, file_prefix)
-
-    # add crowding term
-    ####################################################################
-    model.add_cov(['interactions'])
-    model.reset_params()
-    model.train_gp(grid_size=10)
-
-    file_prefix = protein_name[0] + '_' + str(bootstrap_index) + '_interactions'
+    file_prefix = protein_name[0] + '_' + str(0) + '_interactions'
     write_variance_explained(model, output_dir, file_prefix)
     write_LL_grid(model, output_dir, file_prefix)
 
@@ -66,8 +46,7 @@ if __name__ == '__main__':
     data_dir = sys.argv[1]
     output_dir = sys.argv[2]
     protein_index = int(sys.argv[3])
-    bootstrap_index = sys.argv[4]
-    normalisation = sys.argv[5]
+    normalisation = sys.argv[4]
 
 
     # data_dir = '/Users/damienarnol1/Documents/local/pro/PhD/spatial/data/IMC_paper/res/Ay10x1/'
@@ -77,4 +56,4 @@ if __name__ == '__main__':
     # output_dir = '/tmp/test_svca'
     # normalisation='quantile'
 
-    run(data_dir, protein_index, output_dir, bootstrap_index, normalisation)
+    run(data_dir, protein_index, output_dir, normalisation)
