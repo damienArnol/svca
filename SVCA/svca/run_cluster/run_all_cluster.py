@@ -9,8 +9,8 @@ if __name__ == '__main__':
     # dataset
     ##################################################
     submit_cmd = 'bsub -M 800 -o tmp_log'  # To change for your cluster settings
-    analysis_dir = ''
-    N_prot = 26
+    analysis_dir = '/home/nico/Dropbox/JRC_COMBINE/svca/SVCA/examples/data/IMC_example/'
+    N_prot = 5
 
     ##################################################
     # advanced parameters to change
@@ -19,15 +19,19 @@ if __name__ == '__main__':
 
     ##################################################
     # list directories
-    image_dirs = sorted(glob.glob(analysis_dir+'/*'))
+    image_dirs = sorted(glob.glob(analysis_dir + '/*'))
     for image_dir in image_dirs:
         results_directory = image_dir + '/results/'
         results_directory = util_functions.make_dir(results_directory)
         for protein_ix in range(0, N_prot):
-            command_line = submit_cmd + ' ' + \
-                'python ../run/run_indiv.py ' + \
-                image_dir + ' ' + \
-                results_directory + ' ' + \
-                str(protein_ix)+ ' ' +\
-                normalisation + ' '
+            command_line = ' '.join([#submit_cmd,
+                                     'python ../run/run_indiv.py',
+                                     image_dir, results_directory,
+                                     str(protein_ix), normalisation])
+            #command_line = submit_cmd + ' ' + \
+            #    'python ../run/run_indiv.py ' + \
+            #    image_dir + ' ' + \
+            #    results_directory + ' ' + \
+            #    str(protein_ix)+ ' ' +\
+            #    normalisation + ' '
             os.system(command_line)
