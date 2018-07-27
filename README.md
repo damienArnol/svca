@@ -1,5 +1,11 @@
 # Spatial Variance Components Analysis (SVCA)
 
+## Dependencies
+- numpy
+- scipy
+- pandas
+- limix (local version in this repository)
+
 ## Installation
 
 ### Installing limix

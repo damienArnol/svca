@@ -93,7 +93,7 @@ class Model1(Model):
         Xstar = ~self.train_set
         if not any(Xstar): Xstar = None
 
-        ############### DEBUG
+        ###############
         # toto = np.ones([self.n_samples, self.n_samples])
         # interactions_tmp = ZKZCov(self.X, toto, Xstar=Xstar)
         interactions_tmp = ZKZCov(self.X, self.Kin, Xstar=Xstar)
