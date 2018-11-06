@@ -23,7 +23,8 @@ python setup.py develop
 
 Then install svca
 ```
-cd svca
+cd ..
+cd SVCA
 python setup.py develop
 ```
 
