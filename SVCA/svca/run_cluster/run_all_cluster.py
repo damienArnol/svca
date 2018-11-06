@@ -9,7 +9,7 @@ if __name__ == '__main__':
     # dataset
     ##################################################
     submit_cmd = 'bsub -M 800 -o tmp_log'  # To change for your cluster settings
-    analysis_dir = ''
+    analysis_dir = '../../examples/data/IMC_example' # To change for your image directories
     N_prot = 26
 
     ##################################################
