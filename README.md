@@ -29,6 +29,16 @@ python setup.py develop
 ```
 
 ## Basic usage
+### Computing spatial variance signatures for single images
+Running SVCA on single image and single protein can be done as illustrated in the bash script 
+`SVCA/svca/run/call_run_indiv.sh`. The script calls the `run_indiv.py` script with the following inputs:
+1. `data_dir='../../examples/data/IMC_example/Cy1x7/'` directory with IMC input data
+2. `output_dir='./test_svca'`  the output of the analysis is saved here
+3. `protein_index=23`  select the protein to be modelled
+4. `normalisation='quantile'` select the normalisation method.
+
+For the analysis of all the images and proteins we recommend to use a cluster, this is explained in the next section. 
+
 
 ### Computing spatial variance signatures for multiple images
 
