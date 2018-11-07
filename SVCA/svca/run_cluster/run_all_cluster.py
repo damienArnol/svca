@@ -4,7 +4,6 @@ import glob
 import os
 
 if __name__ == '__main__':
-
     # --------------------------------------------------------------------------
     # To change:
     #           - analysis directory containing one directory per input image
@@ -13,7 +12,7 @@ if __name__ == '__main__':
     # --------------------------------------------------------------------------
 
     submit_cmd = 'bsub -M 800 -o tmp_log'
-    analysis_dir = ''
+    analysis_dir = '../../examples/data/IMC_example' # To change for your image directories
     N_prot = 26
 
     # --------------------------------------------------------------------------
