@@ -45,5 +45,5 @@ if __name__ == '__main__':
     kin_from = np.reshape(np.random.randn(70), [10,7])
 
     tmp = FromRealSimulation(x, y, kin_from)
-    toto = tmp.simulate()
-    print toto
+    tmp_sim  = tmp.simulate()
+    print tmp_sim

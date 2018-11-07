@@ -82,13 +82,4 @@ if __name__ == '__main__':
     interactions_size = bootstrap_index
     normalisation = sys.argv[5]
 
-
-    # data_dir = '/Users/damienarnol1/Documents/local/pro/PhD/spatial/data/IMC_reprocessed_median/Cy1x7/'
-    # # protein_index = 19
-    # protein_index = 3 # 5
-    # interactions_size = 3
-    # output_dir = '/Users/damienarnol1/Documents/local/pro/PhD/spatial/tests/test_new_init/'
-    # normalisation='quantile'
-    # perm = False
-
     run(data_dir, protein_index, output_dir, interactions_size, normalisation)

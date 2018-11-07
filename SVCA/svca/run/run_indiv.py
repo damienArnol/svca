@@ -4,6 +4,7 @@ from svca.models.io import *
 from svca.util_functions import utils
 import sys
 from limix.utils.preprocess import covar_rescaling_factor_efficient
+import argparse
 
 
 def run(data_dir, protein_index, output_dir,
@@ -15,8 +16,23 @@ def run(data_dir, protein_index, output_dir,
     protein_names, phenotypes, X = utils.read_data(expression_file,
                                                    position_file)
 
-    # import pdb; pdb.set_trace()
+    if protein_index is None:
+        for protein_index in range(len(protein_names)):
+            run_indiv(protein_names, phenotypes, X, protein_index, output_dir,
+                normalisation, permute)
+    else:
+        run_indiv(protein_names, phenotypes, X, protein_index, output_dir,
+                normalisation, permute)
+
+def run_indiv(protein_names, phenotypes, X, protein_index, output_dir,
+        normalisation, permute):
+
     protein_name = protein_names[protein_index, :]
+
+    print '-------------------------------------------'
+    print 'running model for ', protein_name[0]
+    print '-------------------------------------------'
+
     phenotype = phenotypes[:, protein_index]
     sel = range(phenotypes.shape[1])
     sel.remove(protein_index)
@@ -39,21 +55,24 @@ def run(data_dir, protein_index, output_dir,
 
     file_prefix = protein_name[0] + '_' + str(0) + '_interactions'
     write_variance_explained(model, output_dir, file_prefix)
-    write_LL_grid(model, output_dir, file_prefix)
+    # write_LL_grid(model, output_dir, file_prefix)
 
 
 if __name__ == '__main__':
-    data_dir = sys.argv[1]
-    output_dir = sys.argv[2]
-    protein_index = int(sys.argv[3])
-    normalisation = sys.argv[4]
+    p = argparse.ArgumentParser( description='Basic run script for SVCA' )
 
+    # I/O
+    p.add_argument( '--indir',           type=str, required=True,                 help='Input data diectory containing an expression and a position file named expressions.txt and positions.txt' )
+    p.add_argument( '--outdir',          type=str, required=True,                 help='Output dir for text files' )
 
-    # data_dir = '/Users/damienarnol1/Documents/local/pro/PhD/spatial/data/IMC_paper/res/Ay10x1/'
-    # # protein_index = 19
-    # protein_index = 23  # 5
-    # bootstrap_index = 3
-    # output_dir = '/tmp/test_svca'
-    # normalisation='quantile'
+    p.add_argument( '--protein_index',   type=int, nargs='+', default=None,       help='Index of the protein on which to run the model, default is to run the model on all proteins')
+    p.add_argument( '--normalisation',   type=str, nargs='+', default="quantile", help='Type of normalisation mehtod to use for the target gene. Default is quantile normalisation. Alternative is standardisation: std')
+
+    args = p.parse_args()
+
+    data_dir = args.indir
+    output_dir = args.outdir
+    protein_index = args.protein_index
+    normalisation = args.normalisation
 
     run(data_dir, protein_index, output_dir, normalisation)

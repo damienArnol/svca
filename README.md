@@ -1,10 +1,20 @@
 # Spatial Variance Components Analysis (SVCA)
 
 ## Dependencies
+
+### Python
 - numpy
 - scipy
 - pandas
+- rpy2 (for the notebooks)
 - limix (local version in this repository)
+
+### R (for plotting)
+- ggplot2
+- reshape2
+- gplots
+- plyr
+- pheatmap
 
 ## Installation
 

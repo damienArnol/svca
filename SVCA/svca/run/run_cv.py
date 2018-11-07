@@ -74,11 +74,4 @@ if __name__ == '__main__':
     N_fold = int(sys.argv[5])
     normalisation = sys.argv[6]
 
-    # data_dir = '/Users/damienarnol1/Documents/local/pro/PhD/spatial/data/IMC_paper/res/Ay10x1/'
-    # # protein_index = 19
-    # protein_index = 23  # 5
-    # bootstrap_index = 3
-    # output_dir = '/tmp/test_svca'
-    # normalisation='quantile'
-
     run(data_dir, protein_index, output_dir, bootstrap_index, normalisation, N_fold)

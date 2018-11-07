@@ -4,17 +4,23 @@ import glob
 import os
 
 if __name__ == '__main__':
-    ##################################################
-    # Directory of the analysis: to change, and number of genes/proteins in the
-    # dataset
-    ##################################################
+    # --------------------------------------------------------------------------
+    # To change:
+    #           - analysis directory containing one directory per input image
+    #           - N_prot: number of genes / proteins in your dataset
+    #           - submit_cmd: the sumbission command for your cluster
+    # --------------------------------------------------------------------------
     submit_cmd = 'bsub -M 800 -o tmp_log'  # To change for your cluster settings
     analysis_dir = ''
     N_prot = 26
 
-    ##################################################
-    # advanced parameters to change
-    ##################################################
+    # --------------------------------------------------------------------------
+    # Optional:
+    #       -normalisation methods implemented are
+    #           - quantile
+    #           - std (centering and standardising)
+    #       - N_sim: number of simulations >10. 
+    # --------------------------------------------------------------------------
     normalisation = 'quantile'
     N_sim = 100   # > 10 the size of the env term is taken from the bootstrap index
 

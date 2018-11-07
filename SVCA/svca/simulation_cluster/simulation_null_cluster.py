@@ -12,9 +12,13 @@ if __name__ == '__main__':
     analysis_dir = ''
     N_prot = 26
 
-    ##################################################
-    # advanced parameters to change
-    ##################################################
+    # --------------------------------------------------------------------------
+    # Optional:
+    #       - normalisation methods implemented are
+    #           - quantile
+    #           - std (centering and standardising)
+    #       -
+    # --------------------------------------------------------------------------
     normalisation = 'quantile'
     N_sim = 100
 

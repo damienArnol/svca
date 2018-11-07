@@ -4,21 +4,27 @@ import glob
 import os
 
 if __name__ == '__main__':
-    ##################################################
-    # Directory of the analysis: to change, and number of genes/proteins in the
-    # dataset
-    ##################################################
-    submit_cmd = 'bsub -M 800 -o tmp_log'  # To change for your cluster settings
+
+    # --------------------------------------------------------------------------
+    # To change:
+    #           - analysis directory containing one directory per input image
+    #           - N_prot: number of genes / proteins in your dataset
+    #           - submit_cmd: the sumbission command for your cluster
+    # --------------------------------------------------------------------------
+
+    submit_cmd = 'bsub -M 800 -o tmp_log'
     analysis_dir = ''
     N_prot = 26
 
-    ##################################################
-    # advanced parameters to change
-    ##################################################
-    normalisation = 'quantile'
+    # --------------------------------------------------------------------------
+    # Optional: normalisation methods implemented are
+    #           - quantile
+    #           - std (centering and standardising)
+    # --------------------------------------------------------------------------
+    normalisation = 'quantile'  # 'std'
 
-    ##################################################
-    # list directories
+
+    # -------------------------------------------------
     image_dirs = sorted(glob.glob(analysis_dir+'/*'))
     for image_dir in image_dirs:
         results_directory = image_dir + '/results/'
