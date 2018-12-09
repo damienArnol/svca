@@ -16,6 +16,9 @@
 - plyr
 - pheatmap
 
+### Others 
+- gcc / g++
+
 ## Installation
 
 ### Installing limix

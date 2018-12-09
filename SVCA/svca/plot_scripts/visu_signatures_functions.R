@@ -4,7 +4,6 @@ library(gplots)
 library(plyr)
 library(pheatmap)
 
-# colours = c('#929292', '#004D7F'  , '#017100','#B51700', '#FF9300' )
 colours = c('#929292', '#004D7F'  , '#017100', '#FF9300' )
 
 w=1500
@@ -61,7 +60,7 @@ read_effects = function(image_dir){
 read_all_signatures = function(working_dir){
   all_images = list.files(working_dir, full.names = TRUE)
   all_images_short = list.files(working_dir, full.names = FALSE)
-  
+
   print(all_images)
   all_res = lapply(all_images, read_effects)
   for(i in 1:length(all_res)){

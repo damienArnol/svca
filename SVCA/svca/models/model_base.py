@@ -1,5 +1,5 @@
 from svca.util_functions import utils
-import utils_loc
+import svca.models.utils_loc as utils_loc
 import numpy as np
 
 # import useful limix functions

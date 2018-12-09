@@ -184,7 +184,7 @@ def build_model(Kinship, phenotype, N_cells, X, cell_types, test_set=None, intri
     # define GP
     gp = limix.core.gp.GP(covar=cov, mean=mean)
 
-    print 'GP created '
+    print('GP created ')
 
     return gp, noise_covs, local_noise_cov, env_covs, intrinsic_cov
 

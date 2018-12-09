@@ -1,7 +1,7 @@
-from model_base import Model
+from svca.models.model_base import Model
 
 from svca.util_functions import utils
-import utils_loc
+import svca.models.utils_loc as utils_loc
 import numpy as np
 
 # import useful limix functions
@@ -141,7 +141,7 @@ class Model1(Model):
             if term in self.covar_terms:
                 del self.covar_terms[term]
             else:
-                print 'cov term ', term, ' not found for deletion '
+                print('cov term ', term, ' not found for deletion ')
         self.covar = apply(SumCov, self.covar_terms.values())
         self.build_gp()
 
@@ -215,7 +215,7 @@ class Model1(Model):
                 self.gp.optimize()
             except:
                 # import pdb; pdb.set_trace()
-                print 'No convergence for non-grid optimisation in Model1'
+                print('No convergence for non-grid optimisation in Model1')
                 exit()
             return
 

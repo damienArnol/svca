@@ -3,7 +3,7 @@ from limix.hcache import cached
 import scipy as sp
 import numpy as np
 from .covar_base import Covariance
-import sqexp
+import  sqexp
 
 
 class ZKZCov(Covariance):
