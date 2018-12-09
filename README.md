@@ -66,7 +66,7 @@ We recommend using a cluster for this.
 
 
 ### Visualising variance signatures
-1. Adapt the file `SVCA/svca/plot_scripts/plot_signatures.R` (bottom). `working_dir` should be your analysis directory and `plot_dir` the directory in which you want to save your plots.
+1. Adapt the file `SVCA/svca/plot_scripts/call_plot_signatures.sh`. `in_dir` should be your analysis directory and `plot_dir` the directory in which you want to save your plots.
 2. run the file
 
 ### Cross validation
