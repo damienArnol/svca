@@ -5,7 +5,7 @@ data_dir='../../examples/IMC_example_local/Cy1x7/'
 # normalisation=''
 # outdir=''  # to select a different output dir fron the indir/results
 
-python run_indiv.py --indir $data_dir
+python run_indiv.py --indir $data_dir 
 
 # --outdir $outdir
 # --protein_index $protein_index

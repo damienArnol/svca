@@ -3,7 +3,7 @@ from limix.hcache import cached
 import scipy as sp
 import numpy as np
 from .covar_base import Covariance
-import  sqexp
+from .sqexp import SQExpCov
 
 
 class ZKZCov(Covariance):
@@ -16,7 +16,7 @@ class ZKZCov(Covariance):
         """
 
         super(ZKZCov, self).__init__()
-        self.se = sqexp.SQExpCov(X)
+        self.se = SQExpCov(X)
         self.X = X
         self.Kin = Kin
         self.rm_diag = remove_diag

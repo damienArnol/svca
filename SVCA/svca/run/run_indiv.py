@@ -22,7 +22,8 @@ def run(data_dir, protein_index, output_dir,
             run_indiv(protein_names, phenotypes, X, protein_index, output_dir,
                 normalisation, permute)
     else:
-        run_indiv(protein_names, phenotypes, X, protein_index, output_dir,
+        for p in protein_index:
+            run_indiv(protein_names, phenotypes, X, p, output_dir,
                 normalisation, permute)
 
 def run_indiv(protein_names, phenotypes, X, protein_index, output_dir,

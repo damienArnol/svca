@@ -78,7 +78,7 @@ class Model1(Model):
             self.covar_terms['environmental'] = self.environmental_cov
 
         self.covar_terms['noise'] = self.noise_cov
-        self.covar = apply(SumCov, self.covar_terms.values())
+        self.covar = SumCov(*self.covar_terms.values())
         self.reset_params()
 
     def build_intrinsic(self):
@@ -133,7 +133,7 @@ class Model1(Model):
             else:
                 raise Exception('covariance term not recognised ')
 
-        self.covar = apply(SumCov, self.covar_terms.values())
+        self.covar = SumCov(*self.covar_terms.values())
         self.build_gp()
 
     def rm_cov(self, cov_term):
@@ -142,7 +142,7 @@ class Model1(Model):
                 del self.covar_terms[term]
             else:
                 print('cov term ', term, ' not found for deletion ')
-        self.covar = apply(SumCov, self.covar_terms.values())
+        self.covar = SumCov(*self.covar_terms.values())
         self.build_gp()
 
     def set_initCovs(self, cov_dir):
@@ -165,7 +165,7 @@ class Model1(Model):
             for term in self.scale_down:
                 self.covar_terms[term].scale *= 1e-10
 
-        self.covar = apply(SumCov, self.covar_terms.values())
+        self.covar = SumCov(*self.covar_terms.values())
         self.build_gp()
 
     def set_scale_down(self, terms):
